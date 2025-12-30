@@ -86,6 +86,7 @@ echo ""
 echo "You can now use these commands in Claude Code by typing:"
 echo "  /commit"
 echo "  /pr"
+echo "  /review-pr"
 echo ""
 
 if [ "$INSTALL_TYPE" = "project-level" ]; then
