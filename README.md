@@ -13,7 +13,7 @@ Enhanced git workflow automation with safety features and standardized processes
 
 **Key improvements over official Anthropic commands:**
 - ✅ Branch safety (prevents commits directly to main/master)
-- ✅ Ticket number support with auto-uppercase
+- ✅ Ticket number support with preserved casing
 - ✅ Detailed PR descriptions with structured format
 - ✅ Single-message execution for reliability
 - ✅ Restricted tool permissions for security
