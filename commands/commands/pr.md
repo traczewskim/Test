@@ -15,7 +15,7 @@ Target branch: $ARGUMENTS
 Remote status: !`git remote -v`
 
 Local commits vs origin: !`git status -sb`
-sss
+
 Commits on current branch (vs target): !`git log $ARGUMENTS..HEAD --oneline`
 
 Changed files: !`git diff --name-status $ARGUMENTS..HEAD`
