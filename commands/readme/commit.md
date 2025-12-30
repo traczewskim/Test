@@ -8,7 +8,7 @@ Creates a git commit with auto-generated message and optional ticket number.
 # Without ticket number
 /commit
 
-# With ticket number (automatically uppercased)
+# With ticket number
 /commit ext-123
 ```
 
@@ -17,8 +17,7 @@ Creates a git commit with auto-generated message and optional ticket number.
 - **Branch safety**: Automatically creates new feature branch if on main/master
 - Automatically stages all changes (`git add .`)
 - Analyzes diff to generate descriptive commit message
-- Supports ticket number prefix: `[EXT-123] commit message`
-- Uppercases ticket number automatically (ext-123 → EXT-123)
+- Supports ticket number prefix (preserves casing): `[ext-123] commit message`
 - Single-message execution (all operations in one response)
 - Restricted tool permissions for safety
 - Does NOT push to remote (manual push required)
@@ -35,14 +34,14 @@ Creates a git commit with auto-generated message and optional ticket number.
 2. Commit with ticket number:
    ```bash
    /commit ext-456
-   # Result: "[EXT-456] fix login validation bug"
+   # Result: "[ext-456] fix login validation bug"
    ```
 
-3. Different ticket formats (all work):
+3. Different ticket formats (all work, casing preserved):
    ```bash
-   /commit ext-123      # → [EXT-123] ...
+   /commit ext-123      # → [ext-123] ...
    /commit EXT-123      # → [EXT-123] ...
-   /commit jira-456     # → [JIRA-456] ...
+   /commit jira-456     # → [jira-456] ...
    ```
 
 ## What it does
