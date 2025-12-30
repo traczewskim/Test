@@ -45,9 +45,9 @@ Current branch: !`git branch --show-current`
 5. **Format with ticket number** (if provided):
    - Ticket number argument: $ARGUMENTS
    - If ticket number is provided:
-     - Convert it to UPPERCASE (e.g., "ext-123" becomes "EXT-123")
+     - Use the ticket number exactly as provided (preserve original casing)
      - Format: `[TICKET-NUMBER] commit message`
-     - Example: `[EXT-123] add user authentication`
+     - Example: `[ext-123] add user authentication`
    - If no ticket number provided:
      - Format: `commit message` (no prefix)
      - Example: `update documentation`
@@ -57,7 +57,7 @@ Current branch: !`git branch --show-current`
    - Do NOT add any footers, attribution, or "Generated with Claude Code" text
    - Do NOT add "Co-Authored-By" lines
    - Format: `git commit -m "commit message"` (simple, single-line message only)
-   - Example: `git commit -m "add user authentication"` or `git commit -m "[EXT-123] fix login bug"`
+   - Example: `git commit -m "add user authentication"` or `git commit -m "[ext-123] fix login bug"`
 
 7. **Report results**: Show the commit hash and message
 

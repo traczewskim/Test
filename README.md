@@ -1,184 +1,78 @@
 # claude-skills
 
-Custom slash commands for Claude Code with enhanced safety and workflow features.
+A curated collection of custom slash commands and skills for Claude Code, designed to enhance your development workflow with safety features, automation, and best practices.
 
-**Improvements from official Anthropic commands:**
+## What's Inside
+
+### Slash Commands
+
+Enhanced git workflow automation with safety features and standardized processes:
+
+- **[/commit](commands/readme/commit.md)** - Create git commits with auto-generated messages and ticket number support
+- **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
+
+**Key improvements over official Anthropic commands:**
 - ✅ Branch safety (prevents commits directly to main/master)
-- ✅ Ticket number support with auto-uppercase
+- ✅ Ticket number support with preserved casing
 - ✅ Detailed PR descriptions with structured format
 - ✅ Single-message execution for reliability
 - ✅ Restricted tool permissions for security
-- ✅ Smart ticket extraction from branch names
 
-## Installation
+### Skills
 
-To use these commands, copy the `commands/` directory to your Claude Code commands directory:
+Specialized capabilities for common development tasks:
 
-### Project-Level Commands (shared with team via git)
+- **[database-analysis](SKILLS/readme/database-analysis.md)** - Connect to databases, execute queries, and analyze data patterns
+- **[frontend-design](SKILLS/readme/frontend-design.md)** - Create distinctive, production-grade frontend interfaces with exceptional design quality
+
+## Quick Start
+
+### Installing Commands
+
+Commands are markdown files that provide quick prompts and workflows.
+
+**Project-level (shared with team via git):**
 ```bash
-cp commands/*.md /path/to/your/project/.claude/commands/
+cp commands/commands/*.md /path/to/your/project/.claude/commands/
 ```
 
-### Personal Commands (available in all projects)
+**Personal (available in all projects):**
 ```bash
 mkdir -p ~/.claude/commands
-cp commands/*.md ~/.claude/commands/
+cp commands/commands/*.md ~/.claude/commands/
 ```
 
-## Available Commands
+### Installing Skills
 
-### `/commit` - Create Git Commit
+Skills are specialized capabilities for complex tasks.
 
-Creates a git commit with auto-generated message and optional ticket number.
-
-**Usage:**
+**Project-level (shared with team via git):**
 ```bash
-# Without ticket number
-/commit
-
-# With ticket number (automatically uppercased)
-/commit ext-123
+cp -r SKILLS/skills/* /path/to/your/project/.claude/skills/
 ```
 
-**Features:**
-- **Branch safety**: Automatically creates new feature branch if on main/master
-- Automatically stages all changes (`git add .`)
-- Analyzes diff to generate descriptive commit message
-- Supports ticket number prefix: `[EXT-123] commit message`
-- Uppercases ticket number automatically (ext-123 → EXT-123)
-- Single-message execution (all operations in one response)
-- Restricted tool permissions for safety
-- Does NOT push to remote (manual push required)
-- Does NOT mention Claude or Claude Code in messages
-
-**Examples:**
-
-1. Simple commit without ticket:
-   ```bash
-   /commit
-   # Result: "add user authentication feature"
-   ```
-
-2. Commit with ticket number:
-   ```bash
-   /commit ext-456
-   # Result: "[EXT-456] fix login validation bug"
-   ```
-
-3. Different ticket formats (all work):
-   ```bash
-   /commit ext-123      # → [EXT-123] ...
-   /commit EXT-123      # → [EXT-123] ...
-   /commit jira-456     # → [JIRA-456] ...
-   ```
-
-**What it does:**
-1. Checks if on main/master branch
-2. Creates new feature branch if needed (prevents commits directly to main)
-3. Stages all changes
-4. Analyzes git diff
-5. Generates commit message
-6. Formats with ticket number if provided
-7. Creates commit locally
-8. Shows commit hash and message
-
-**What it does NOT do:**
-- Push to remote (you push manually)
-- Create PRs
-- Run tests
-- Modify files
-
-### `/pr` - Create Pull Request
-
-Creates a GitHub pull request with auto-generated title, detailed description, and ticket number detection.
-
-**Usage:**
+**Personal (available in all projects):**
 ```bash
-# Create PR to master
-/pr master
-
-# Create PR to develop
-/pr develop
-
-# Create PR to any branch
-/pr staging
+mkdir -p ~/.claude/skills
+cp -r SKILLS/skills/* ~/.claude/skills/
 ```
 
-**Features:**
-- Auto-generates PR title from recent commits
-- Creates detailed PR description with summary, changes, and testing notes
-- Extracts ticket number from branch name (e.g., `feature/ext-123-login` → `[EXT-123]`)
-- Automatically pushes current branch to remote
-- Force pushes with `--force-with-lease` if branch already exists
-- Opens PR in browser automatically
-- Single-message execution (all operations in one response)
-- Restricted tool permissions for safety
-- Handles GitHub authentication and errors gracefully
+## Project Structure
 
-**Examples:**
-
-1. Simple PR from feature branch:
-   ```bash
-   # On branch: feature/ext-123-user-auth
-   /pr master
-   # Result: Creates PR with title "[EXT-123] Add user authentication"
-   ```
-
-2. PR without ticket number:
-   ```bash
-   # On branch: update-docs
-   /pr master
-   # Result: Creates PR with title "Update documentation"
-   ```
-
-3. PR to different target:
-   ```bash
-   # On branch: feature/ext-456-api
-   /pr develop
-   # Result: Creates PR to develop branch with title "[EXT-456] Add new API endpoints"
-   ```
-
-**What it does:**
-1. Validates target branch argument
-2. Extracts ticket number from current branch name
-3. Analyzes commit history and changes
-4. Generates descriptive PR title and detailed description
-5. Pushes current branch to remote (force-with-lease if needed)
-6. Creates PR using GitHub CLI (`gh pr create`)
-7. Opens PR in browser
-8. Displays PR URL and details
-
-**What it does NOT do:**
-- Merge the PR (manual review required)
-- Run CI/CD tests
-- Request reviewers automatically
-- Create draft PRs (creates regular PRs)
-
-**Requirements:**
-- GitHub CLI (`gh`) must be installed
-- Must be authenticated with GitHub (`gh auth login`)
-- Must be in a git repository
-- Target branch must exist
-
-**PR Description Format:**
-The command generates a structured description:
-```markdown
-## Summary
-[Brief overview of what the PR does and why]
-
-## Changes
-- Detailed bullet points of what was changed
-- Explains the "what" and "why" of changes
-- Groups related changes together
-
-## Technical Details
-[Important technical notes, patterns, dependencies]
-
-## Testing
-[How to test the changes, scenarios to verify]
+```
+claude-skills/
+├── commands/
+│   ├── commands/       # Actual command files for Claude Code
+│   └── readme/         # Documentation for each command
+├── SKILLS/
+│   ├── skills/         # Actual skill directories for Claude Code
+│   └── readme/         # Documentation for each skill
+└── README.md           # This file
 ```
 
-## Command Structure
+## Creating Your Own
+
+### Commands
 
 Slash commands are Markdown files with YAML frontmatter:
 
@@ -197,27 +91,28 @@ Use $ARGUMENTS to access command arguments.
 Your task instructions here...
 ```
 
-## Best Practices
+**Best Practices:**
+1. Keep it simple - commands are for quick prompts, not complex workflows
+2. Use allowed-tools to restrict permissions for safety
+3. Capture context with `!` commands to get current state
+4. Write clear, step-by-step instructions
+5. Test before sharing
 
-1. **Keep it simple**: Slash commands are for quick prompts, not complex workflows
-2. **Use allowed-tools**: Restrict which tools the command can use for safety
-3. **Capture context**: Use `!` commands to get current state (git status, file contents, etc.)
-4. **Clear instructions**: Tell Claude exactly what to do step-by-step
-5. **Test before sharing**: Try the command locally before committing to git
+### Skills
 
-## Creating New Commands
+Skills are more complex capabilities with detailed instructions and context.
 
-1. Create a new `.md` file in the `commands/` directory
-2. Add YAML frontmatter with description and allowed tools
-3. Write clear instructions for Claude
-4. Test it by copying to `.claude/commands/`
-5. Once verified, commit to git for team sharing
+See existing skills in `SKILLS/skills/` for examples and patterns.
 
 ## Resources
 
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
 - [Slash Commands Guide](https://docs.anthropic.com/claude-code/guides/slash-commands)
 - [YAML Frontmatter Options](https://docs.anthropic.com/claude-code/reference/slash-commands)
+
+## Contributing
+
+This is a personal collection, but feel free to fork and create your own custom commands and skills!
 
 ---
 
