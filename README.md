@@ -10,6 +10,7 @@ Enhanced git workflow automation with safety features and standardized processes
 
 - **[/commit](commands/readme/commit.md)** - Create git commits with auto-generated messages and ticket number support
 - **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
+- **[/review-pr](commands/readme/review-pr.md)** - Perform thorough code reviews with quality, security, and test analysis
 
 **Key improvements over official Anthropic commands:**
 - ✅ Branch safety (prevents commits directly to main/master)
