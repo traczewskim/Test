@@ -1,7 +1,7 @@
 ---
 description: Create a pull request to target branch
 argument-hint: <target-branch>
-allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(gh pr create:*)
+allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(gh pr create:*), Bash(gh pr edit:*), Bash(gh pr list:*)
 ---
 
 # Create Pull Request Command
