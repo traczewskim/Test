@@ -11,6 +11,7 @@ Enhanced git workflow automation with safety features and standardized processes
 - **[/new-ticket](commands/readme/new-ticket.md)** - Start work on a new ticket with automatic branch creation and ticket storage
 - **[/commit](commands/readme/commit.md)** - Create git commits with auto-generated messages and automatic ticket number integration
 - **[/lint](commands/readme/lint.md)** - Auto-detect and run all configured linters/formatters with unified output
+- **[/sync-branch](commands/readme/sync-branch.md)** - Keep feature branch up-to-date with target branch (merge/rebase strategies)
 - **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
 - **[/pr-review](commands/readme/pr-review.md)** - Perform thorough code reviews with quality, security, and test analysis
 
