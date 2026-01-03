@@ -1,4 +1,4 @@
-# `/review-pr` - Review Pull Request
+# `/pr-review` - Review Pull Request
 
 Performs a thorough code review of a GitHub pull request with analysis of code quality, security, tests, and best practices.
 
@@ -6,10 +6,10 @@ Performs a thorough code review of a GitHub pull request with analysis of code q
 
 ```bash
 # List PRs and choose which to review
-/review-pr
+/pr-review
 
 # Review specific PR by number
-/review-pr 123
+/pr-review 123
 ```
 
 ## Features
@@ -31,7 +31,7 @@ Performs a thorough code review of a GitHub pull request with analysis of code q
 
 1. Interactive review:
    ```bash
-   /review-pr
+   /pr-review
    # Lists all open PRs
    # Prompts you to select which one to review
    # Performs thorough analysis
@@ -39,7 +39,7 @@ Performs a thorough code review of a GitHub pull request with analysis of code q
 
 2. Direct review by PR number:
    ```bash
-   /review-pr 42
+   /pr-review 42
    # Reviews PR #42 immediately
    # No prompt needed
    ```
@@ -138,9 +138,9 @@ Copy the command file to your Claude Code commands directory:
 
 ```bash
 # Project-level (shared with team via git)
-cp commands/commands/review-pr.md /path/to/your/project/.claude/commands/
+cp commands/commands/pr-review.md /path/to/your/project/.claude/commands/
 
 # Personal (available in all projects)
 mkdir -p ~/.claude/commands
-cp commands/commands/review-pr.md ~/.claude/commands/
+cp commands/commands/pr-review.md ~/.claude/commands/
 ```

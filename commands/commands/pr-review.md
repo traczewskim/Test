@@ -18,7 +18,7 @@ PR argument (if provided): $ARGUMENTS
 
 ### 1. Determine Which PR to Review
 
-**If $ARGUMENTS is provided (e.g., `/review-pr 123`):**
+**If $ARGUMENTS is provided (e.g., `/pr-review 123`):**
 - Use the PR number from $ARGUMENTS
 - Validate it exists by checking against the PR list
 

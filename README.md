@@ -11,7 +11,7 @@ Enhanced git workflow automation with safety features and standardized processes
 - **[/new-ticket](commands/readme/new-ticket.md)** - Start work on a new ticket with automatic branch creation and ticket storage
 - **[/commit](commands/readme/commit.md)** - Create git commits with auto-generated messages and automatic ticket number integration
 - **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
-- **[/review-pr](commands/readme/review-pr.md)** - Perform thorough code reviews with quality, security, and test analysis
+- **[/pr-review](commands/readme/pr-review.md)** - Perform thorough code reviews with quality, security, and test analysis
 
 **Key improvements over official Anthropic commands:**
 - ✅ Integrated ticket workflow (create ticket → commit → PR)

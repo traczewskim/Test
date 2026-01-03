@@ -134,4 +134,4 @@ When you use `/new-ticket` to start work on a ticket:
 
 - **[/new-ticket](new-ticket.md)** - Start work on a new ticket (stores ticket number)
 - **[/pr](pr.md)** - Create pull requests
-- **[/review-pr](review-pr.md)** - Review pull requests
+- **[/pr-review](pr-review.md)** - Review pull requests

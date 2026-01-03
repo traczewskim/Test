@@ -87,7 +87,7 @@ echo "You can now use these commands in Claude Code by typing:"
 echo "  /new-ticket <ticket-number> [base-branch]"
 echo "  /commit [ticket-number]"
 echo "  /pr <target-branch>"
-echo "  /review-pr <pr-number>"
+echo "  /pr-review <pr-number>"
 echo ""
 
 if [ "$INSTALL_TYPE" = "project-level" ]; then
