@@ -22,7 +22,7 @@ Remote branches: !`git branch -r | head -10`
 
 **IMPORTANT**: You MUST complete all steps in a single message using parallel tool calls where possible. Do not send multiple messages.
 
-This command keeps your feature branch up-to-date with a target branch (typically main/master/develop) by merging or rebasing the latest changes.
+This command keeps your feature branch up-to-date with a target branch (typically main/master/develop/release/*) by merging or rebasing the latest changes.
 
 ### 1. Parse Arguments
 
@@ -31,6 +31,7 @@ Arguments are provided in $ARGUMENTS with these possible formats:
 **Target branch (optional):**
 - `main` - Sync with main branch
 - `develop` - Sync with develop branch
+- `release/v3.2.0` - Sync with release branch
 - No argument - Auto-detect or ask user
 
 **Strategy flags (optional):**
@@ -41,6 +42,7 @@ Arguments are provided in $ARGUMENTS with these possible formats:
 **Examples:**
 - `/sync-branch main` - Merge main into current branch
 - `/sync-branch develop --rebase` - Rebase current branch onto develop
+- `/sync-branch release/v3.2.0` - Merge release branch into current branch
 - `/sync-branch --dry-run` - Preview sync with auto-detected target
 - `/sync-branch main --ff-only` - Only update if no divergence
 
@@ -131,8 +133,8 @@ Continue to next step
 ```bash
 current_branch=$(git branch --show-current)
 
-# Pattern: feature/*, bugfix/*, hotfix/* → likely branched from main/master
-# Pattern: release/* → likely branched from develop
+# Pattern: feature/*, bugfix/*, hotfix/* → likely branched from main/master or release/*
+# Pattern: release/* → cannot auto-detect (is a target branch itself)
 # Check which default branch exists
 ```
 
@@ -140,7 +142,8 @@ current_branch=$(git branch --show-current)
 1. Check if `main` branch exists: `git rev-parse --verify main 2>/dev/null`
 2. Check if `master` branch exists: `git rev-parse --verify master 2>/dev/null`
 3. Check if `develop` branch exists: `git rev-parse --verify develop 2>/dev/null`
-4. Use the first one found
+4. Check for release branches: `git branch -r | grep 'origin/release/' | sed 's|origin/||'`
+5. Use the first default branch found (main/master/develop)
 
 **If auto-detection succeeds:**
 ```
@@ -149,14 +152,23 @@ Auto-detected target branch: main
 
 **If auto-detection fails:**
 
+List all available target branches and ask user:
+
+```bash
+# Get list of branches
+default_branches=$(git branch -a | grep -E '(main|master|develop)' | sed 's|remotes/origin/||' | sort -u)
+release_branches=$(git branch -r | grep 'origin/release/' | sed 's|origin/||' | sort -rn | head -5)
+```
+
 Use AskUserQuestion to ask:
 ```
 Which branch should we sync with?
 
-Available branches:
-- main
-- develop
-- staging
+Default branches:
+${default_branches}
+
+Recent release branches:
+${release_branches}
 
 Enter target branch:
 ```

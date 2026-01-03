@@ -4,7 +4,7 @@ Keep your feature branch up-to-date with the latest changes from main, develop, 
 
 ## Overview
 
-The `/sync-branch` command updates your current branch with changes from a target branch (typically main/master/develop). It handles divergence, uncommitted changes, conflicts, and provides clear guidance throughout the process.
+The `/sync-branch` command updates your current branch with changes from a target branch (main/master/develop or release branches like release/v3.2.0). It handles divergence, uncommitted changes, conflicts, and provides clear guidance throughout the process.
 
 ## Usage
 
@@ -15,9 +15,11 @@ The `/sync-branch` command updates your current branch with changes from a targe
 # Sync with specific branch (merge strategy)
 /sync-branch main
 /sync-branch develop
+/sync-branch release/v3.2.0
 
 # Use rebase instead of merge
 /sync-branch main --rebase
+/sync-branch release/v3.2.0 --rebase
 
 # Preview what would happen
 /sync-branch main --dry-run
@@ -68,6 +70,39 @@ When teammates merge to main and you need their changes:
 /sync-branch main
 # ✓ Now you have their changes
 ```
+
+### Working with Release Branches
+
+Keep feature branches synced with release branches during release cycles:
+
+```bash
+# Scenario: Features merge to release/v3.2.0 branch
+
+# Start feature for release 3.2.0
+/new-ticket ext-456
+
+# Work on feature
+# ... changes ...
+/commit
+
+# Sync with release branch (not main)
+/sync-branch release/v3.2.0
+
+# Continue development
+# ... more changes ...
+/commit
+
+# Final sync before PR
+/sync-branch release/v3.2.0
+
+# Create PR to release branch
+/pr release/v3.2.0
+```
+
+**Common release workflows:**
+- Feature branches → release/vX.Y.Z → main
+- Sync with release branch to get other features in the same release
+- Release branches are integration points during release preparation
 
 ## How It Works
 
@@ -371,6 +406,51 @@ Status:
 
 You have 3 local commits ready to push.
 ```
+
+### Example 7: Syncing with Release Branch
+
+Working on a feature for a specific release:
+
+```bash
+/sync-branch release/v3.2.0
+```
+
+```
+Fetching latest changes from origin/release/v3.2.0...
+✓ Fetched
+
+Status:
+  ↓ Behind by 8 commits
+  ↑ Ahead by 2 commits
+
+Your branch has diverged from release/v3.2.0:
+  ↓ 8 new commits in release/v3.2.0
+  ↑ 2 commits in your branch
+
+Strategy: merge
+
+Merging origin/release/v3.2.0 into feature/ext-456...
+✓ Successfully merged origin/release/v3.2.0 into feature/ext-456
+
+Incorporated 8 commits from release/v3.2.0
+
+Recent commits from release/v3.2.0:
+  abc123 Add user profile feature
+  def456 Update payment integration
+  789ghi Fix authentication bug
+  ... and 5 more
+
+Next steps:
+  ✓ Run tests: /lint && npm test
+  ✓ Push updated branch: git push
+
+Would you like to push the updated branch to remote? [y/n]
+```
+
+**Why sync with release branches:**
+- Get other features being released in the same version
+- Ensure compatibility with features already merged to release
+- Integration testing before release goes out
 
 ## Workflow Integration
 
