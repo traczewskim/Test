@@ -26,6 +26,8 @@ Enhanced git workflow automation with safety features and standardized processes
 
 Specialized capabilities for common development tasks:
 
+- **[create-proposal](SKILLS/readme/create-proposal.md)** - Create detailed technical proposals for new features following a structured 5-phase approach (requirements → brainstorming → drafts → confirmation → implementation)
+- **[create-technical-requirements](SKILLS/readme/create-technical-requirements.md)** - Generate comprehensive, step-by-step technical requirements documentation for implementable specifications
 - **[database-analysis](SKILLS/readme/database-analysis.md)** - Connect to databases, execute queries, and analyze data patterns
 - **[frontend-design](SKILLS/readme/frontend-design.md)** - Create distinctive, production-grade frontend interfaces with exceptional design quality
 
@@ -35,12 +37,19 @@ Specialized capabilities for common development tasks:
 
 Commands are markdown files that provide quick prompts and workflows.
 
-**Project-level (shared with team via git):**
+**Using the installer (recommended):**
+```bash
+./install-commands.sh
+```
+
+**Manual installation:**
+
+Project-level (shared with team via git):
 ```bash
 cp commands/commands/*.md /path/to/your/project/.claude/commands/
 ```
 
-**Personal (available in all projects):**
+Personal (available in all projects):
 ```bash
 mkdir -p ~/.claude/commands
 cp commands/commands/*.md ~/.claude/commands/
@@ -50,12 +59,19 @@ cp commands/commands/*.md ~/.claude/commands/
 
 Skills are specialized capabilities for complex tasks.
 
-**Project-level (shared with team via git):**
+**Using the installer (recommended):**
+```bash
+./install-skills.sh
+```
+
+**Manual installation:**
+
+Project-level (shared with team via git):
 ```bash
 cp -r SKILLS/skills/* /path/to/your/project/.claude/skills/
 ```
 
-**Personal (available in all projects):**
+Personal (available in all projects):
 ```bash
 mkdir -p ~/.claude/skills
 cp -r SKILLS/skills/* ~/.claude/skills/
