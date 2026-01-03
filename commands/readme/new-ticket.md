@@ -168,4 +168,4 @@ The `/commit` command automatically extracts the ticket number from your branch 
 
 - **[/commit](commit.md)** - Create commits with automatic ticket number
 - **[/pr](pr.md)** - Create pull requests (extracts ticket from branch name)
-- **[/review-pr](review-pr.md)** - Review pull requests
+- **[/pr-review](pr-review.md)** - Review pull requests
