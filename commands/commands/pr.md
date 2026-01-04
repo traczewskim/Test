@@ -1,7 +1,7 @@
 ---
-description: Create a pull request to target branch
+description: Create or update pull request to target branch
 argument-hint: <target-branch>
-allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(gh pr create:*), Bash(gh pr edit:*), Bash(gh pr list:*)
+allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(gh pr create:*), Bash(gh pr edit:*), Bash(gh pr list:*), Bash(gh pr comment:*)
 ---
 
 # Create Pull Request Command
@@ -84,7 +84,7 @@ Analyze the git diff and commit history to create a detailed description with:
 
 ### 5. Push Current Branch
 
-Before creating PR, ensure branch is pushed to remote:
+Before creating/updating PR, ensure branch is pushed to remote:
 
 - Check if remote branch exists: `git ls-remote --heads origin $(git branch --show-current)`
 - If branch doesn't exist on remote:
@@ -93,9 +93,54 @@ Before creating PR, ensure branch is pushed to remote:
   - Force push with lease: `git push --force-with-lease origin $(git branch --show-current)`
 - Report what was pushed
 
-### 6. Create Pull Request
+### 6. Check for Existing Pull Request
 
-Use GitHub CLI to create the PR:
+Before creating a new PR, check if one already exists for this branch:
+
+```bash
+# List PRs for current branch (all states)
+gh pr list --head $(git branch --show-current) --json number,state,title,url
+```
+
+**Parse the response:**
+
+- **If NO PR exists**: Proceed to step 7 (Create New PR)
+- **If PR exists**: Check the state
+
+**PR States:**
+- `OPEN`: PR is currently open
+- `CLOSED`: PR was closed without merging
+- `MERGED`: PR was merged
+
+**Decision logic:**
+
+1. **If state is OPEN**:
+   ```
+   ℹ️  Existing PR found for this branch
+
+   PR #${number}: ${title}
+   Status: Open
+   URL: ${url}
+
+   Updating existing PR with latest changes...
+   ```
+   - Proceed to step 8 (Update Existing PR)
+
+2. **If state is CLOSED or MERGED**:
+   ```
+   ℹ️  Previous PR for this branch was ${state}
+
+   PR #${number}: ${title}
+   Status: ${state}
+   URL: ${url}
+
+   Creating new PR for updated changes...
+   ```
+   - Proceed to step 7 (Create New PR)
+
+### 7. Create New Pull Request
+
+Use GitHub CLI to create a new PR:
 
 ```bash
 gh pr create \
@@ -113,14 +158,97 @@ gh pr create \
 - Use proper escaping for title and body (handle quotes, newlines)
 - Use HEREDOC syntax for multi-line body: `--body "$(cat <<'EOF' ... EOF)"`
 
-### 7. Report Results
+**After creation, show:**
+```
+✓ PR created successfully
 
-After PR is created, show:
-- ✓ PR created successfully
-- PR #: [number]
-- Title: [title]
-- URL: [url]
-- Target: current-branch → target-branch
+PR #${number}: ${title}
+URL: ${url}
+Target: ${current_branch} → ${target_branch}
+```
+
+Skip to step 9 (Final Report)
+
+### 8. Update Existing Pull Request
+
+Update the existing open PR with new title and description:
+
+```bash
+gh pr edit ${pr_number} \
+  --title "PR_TITLE_HERE" \
+  --body "PR_DESCRIPTION_HERE"
+```
+
+**Important:**
+- Use the PR number from step 6
+- Update both title and body with freshly generated content
+- This ensures PR reflects latest changes
+
+**Additionally, push notification:**
+```bash
+# Add a comment to notify about the update
+gh pr comment ${pr_number} --body "Updated PR with latest changes from $(git log -1 --pretty=format:'%h - %s')"
+```
+
+**After update, show:**
+```
+✓ PR updated successfully
+
+PR #${number}: ${title}
+Status: Updated with latest changes
+URL: ${url}
+Target: ${current_branch} → ${target_branch}
+
+Latest commit: $(git log -1 --oneline)
+```
+
+### 9. Final Report
+
+Show summary of what was done:
+
+**For new PR:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pull Request Created
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PR #${number}: ${title}
+URL: ${url}
+
+${current_branch} → ${target_branch}
+
+Changes:
+  ${commit_count} commits
+  ${files_count} files changed
+
+Next steps:
+  • Review PR on GitHub
+  • Request reviewers
+  • Address any CI/CD feedback
+```
+
+**For updated PR:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pull Request Updated
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PR #${number}: ${title}
+URL: ${url}
+
+${current_branch} → ${target_branch}
+
+Updated with:
+  ${new_commits} new commits
+  ${updated_files} files changed
+
+Latest: ${latest_commit_message}
+
+Next steps:
+  • Reviewers will be notified
+  • Check CI/CD status
+  • Respond to review comments
+```
 
 ## Error Handling
 
@@ -129,18 +257,24 @@ Handle these cases gracefully:
 - **No target branch provided**: Show usage message
 - **Target branch doesn't exist**: List available branches
 - **No commits to create PR**: Error - nothing to merge
-- **PR already exists**: Show existing PR URL
+- **PR check fails**: Continue to create new PR (fallback behavior)
 - **Not a git repository**: Error message
 - **GitHub CLI not installed**: Error with installation instructions
 - **Not authenticated with GitHub**: Error with `gh auth login` instructions
+- **Update PR fails**: Show error but don't fail completely, offer to create new PR
 
 ## Important Notes
 
 - **Execute all operations in ONE message** - use parallel tool calls, do not send multiple responses
-- Always push before creating PR
+- **Check for existing PRs first** - Update open PRs instead of creating duplicates
+- Always push before creating/updating PR
 - Use --force-with-lease (safer than --force)
 - Create PR directly from CLI (no --web flag needed)
 - Generate meaningful, detailed descriptions
 - Extract ticket numbers from branch names
 - Do NOT mention Claude or Claude Code in PR title/description
 - Handle multi-line descriptions properly in gh command using HEREDOC syntax
+- **PR update behavior**:
+  - If PR is OPEN → update title, description, and add comment
+  - If PR is CLOSED/MERGED → create new PR
+  - If no PR exists → create new PR
