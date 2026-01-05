@@ -91,6 +91,8 @@ echo "  /pr-review <pr-number>"
 echo "  /sync-branch <target-branch>"
 echo "  /lint"
 echo "  /compare-branch <branch1> [branch2]"
+echo "  /create-release [target-branch] [version]"
+echo "  /merge-release [release-branch]"
 echo "  /release [version] [branch] [--pre-release]"
 echo ""
 

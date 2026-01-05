@@ -15,6 +15,8 @@ Enhanced git workflow automation with safety features and standardized processes
 - **[/compare-branch](commands/readme/compare-branch.md)** - Compare two branches to see differences in commits, files, and tickets
 - **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
 - **[/pr-review](commands/readme/pr-review.md)** - Perform thorough code reviews with quality, security, and test analysis
+- **[/create-release](commands/readme/create-release.md)** - Create release PR from release branch with ticket extraction and release label ⚠️ **EXPERIMENTAL**
+- **[/merge-release](commands/readme/merge-release.md)** - Merge approved release PR with comprehensive safety checks ⚠️ **EXPERIMENTAL**
 - **[/release](commands/readme/release.md)** - Create GitHub releases with automatic version detection and release notes generation ⚠️ **EXPERIMENTAL**
 
 **Key improvements over official Anthropic commands:**
@@ -164,15 +166,20 @@ Here's how all the commands work together for a complete development workflow:
 /pr main
 # Result: PR titled "[JIRA-1234] Add user authentication feature"
 
-# 9. After PR is merged, create release candidate
-git checkout release/v1.0.2
-/release
-# Wizard creates: v1.0.2-rc.1 (pre-release)
+# 9. After feature PR is merged, create release PR
+/create-release master v1.0.2
+# Creates PR from release/v1.0.2 to master with all tickets listed
 
-# 10. After testing RC, create final release
-git checkout master
-/release
-# Wizard creates: v1.0.2 (regular release)
+# 10. Get release PR approved
+# (Team reviews the release PR on GitHub)
+
+# 11. Merge the approved release
+/merge-release v1.0.2
+# Merges release/v1.0.2 into master after approval checks
+
+# 12. Create GitHub release
+/release v1.0.2
+# Creates GitHub release with tags and notes
 ```
 
 ## Resources
