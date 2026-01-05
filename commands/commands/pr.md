@@ -1,7 +1,7 @@
 ---
 description: Create or update pull request to target branch
 argument-hint: <target-branch>
-allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(gh pr create:*), Bash(gh pr edit:*), Bash(gh pr list:*), Bash(gh pr comment:*)
+allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash(git log:*), Bash(git diff:*), Bash(gh pr create:*), Bash(gh pr edit:*), Bash(gh pr list:*), Bash(git rev-parse:*)
 ---
 
 # Create Pull Request Command
@@ -10,37 +10,54 @@ allowed-tools: Bash(git push:*), Bash(git ls-remote:*), Bash(git branch:*), Bash
 
 Current branch: !`git branch --show-current`
 
-Target branch: $ARGUMENTS
+Target branch (user provided): $ARGUMENTS
 
 Remote status: !`git remote -v`
 
 Local commits vs origin: !`git status -sb`
 
-Commits on current branch (vs target): !`git log $ARGUMENTS..HEAD --oneline`
-
-Changed files: !`git diff --name-status $ARGUMENTS..HEAD`
-
-Detailed diff: !`git diff $ARGUMENTS..HEAD --stat`
+Available branches: !`git branch -a`
 
 ## Your Task
 
 **IMPORTANT**: You MUST complete all steps in a single message using parallel tool calls where possible. Do not send multiple messages or additional responses beyond the required tool calls.
 
-### 1. Validate Arguments
+### 1. Validate and Normalize Target Branch
 
 - Ensure target branch is provided in $ARGUMENTS
 - If no target branch, respond with error: "Usage: /pr <target-branch>"
+- **Normalize the branch name:**
+  - User-provided branch is in $ARGUMENTS (e.g., "main", "origin/main", "master")
+  - Check if the exact branch exists: `git rev-parse --verify $ARGUMENTS 2>/dev/null`
+  - If it doesn't exist, try alternative forms:
+    - If $ARGUMENTS is "main", try "origin/main"
+    - If $ARGUMENTS is "origin/main", try "main"
+    - If $ARGUMENTS is "master", try "origin/master"
+    - If $ARGUMENTS is "origin/master", try "master"
+    - Same pattern for: develop, staging, production, etc.
+  - Use the first valid branch reference found
+  - If no valid branch found, error with: "Branch not found. Available branches:" and list from context
+  - **Store the normalized branch name in a variable** - use this in ALL subsequent git commands
+  - The normalized branch name should be used for: git log, git diff, and --base in gh pr create
 - Common target branches: master, main, develop, staging
 
-### 2. Extract Ticket Number from Current Branch
+### 2. Analyze Changes (Using Normalized Branch)
+
+- **IMPORTANT**: Use the normalized branch name from step 1 in all git commands below
+- Get commits on current branch: `git log <normalized-branch>..HEAD --oneline`
+- Get changed files: `git diff --name-status <normalized-branch>..HEAD`
+- Get detailed diff: `git diff <normalized-branch>..HEAD --stat`
+- Use this information for generating PR title and description
+
+### 3. Extract Ticket Number from Current Branch
 
 - Get current branch name
-- Look for ticket pattern: `feature/ext-123-description`, `bugfix/jira-456`, `ext-789`, etc.
-- Extract ticket number (e.g., "ext-123", "jira-456")
-- Convert to UPPERCASE (e.g., "EXT-123", "JIRA-456")
+- Look for ticket pattern: `feature/jira-123-description`, `bugfix/jira-456`, `jira-789`, etc.
+- Extract ticket number (e.g., "jira-123", "jira-456")
+- Convert to UPPERCASE (e.g., "JIRA-123", "JIRA-456")
 - If no ticket found, that's OK (proceed without ticket prefix)
 
-### 3. Generate PR Title
+### 4. Generate PR Title
 
 - Analyze recent commits to understand the main purpose
 - Create a concise, descriptive title (under 72 characters)
@@ -48,11 +65,11 @@ Detailed diff: !`git diff $ARGUMENTS..HEAD --stat`
 - If no ticket number, format as: `title`
 - Use imperative mood (e.g., "Add feature" not "Added feature")
 - Examples:
-  - `[EXT-123] Add user authentication with JWT`
+  - `[JIRA-123] Add user authentication with JWT`
   - `[JIRA-456] Fix memory leak in data processor`
   - `Update database schema for new fields`
 
-### 4. Generate PR Description
+### 5. Generate PR Description
 
 Analyze the git diff and commit history to create a detailed description with:
 
@@ -82,7 +99,7 @@ Analyze the git diff and commit history to create a detailed description with:
 - Keep it professional and clear
 - Do NOT mention Claude or Claude Code
 
-### 5. Push Current Branch
+### 6. Push Current Branch
 
 Before creating/updating PR, ensure branch is pushed to remote:
 
@@ -93,7 +110,7 @@ Before creating/updating PR, ensure branch is pushed to remote:
   - Force push with lease: `git push --force-with-lease origin $(git branch --show-current)`
 - Report what was pushed
 
-### 6. Check for Existing Pull Request
+### 7. Create Pull Request
 
 Before creating a new PR, check if one already exists for this branch:
 
@@ -144,82 +161,21 @@ Use GitHub CLI to create a new PR:
 
 ```bash
 gh pr create \
-  --base $ARGUMENTS \
+  --base <normalized-branch> \
   --head $(git branch --show-current) \
   --title "PR_TITLE_HERE" \
   --body "PR_DESCRIPTION_HERE"
 ```
 
 **Important:**
-- `--base` is the target branch from $ARGUMENTS
+- `--base` is the **normalized** target branch from step 1 (NOT $ARGUMENTS)
 - `--head` is the current branch
 - Command will create the PR and return the URL
 - **DO NOT use --web flag** - do not open browser
 - Use proper escaping for title and body (handle quotes, newlines)
 - Use HEREDOC syntax for multi-line body: `--body "$(cat <<'EOF' ... EOF)"`
 
-**After creation, show:**
-```
-✓ PR created successfully
-
-PR #${number}: ${title}
-URL: ${url}
-Target: ${current_branch} → ${target_branch}
-```
-
-Skip to step 9 (Final Report)
-
-### 8. Update Existing Pull Request
-
-Update the existing open PR with new title and description:
-
-```bash
-gh pr edit ${pr_number} \
-  --title "PR_TITLE_HERE" \
-  --body "PR_DESCRIPTION_HERE"
-```
-
-**Important:**
-- Use the PR number from step 6
-- Update both title and body with freshly generated content
-- This ensures PR reflects latest changes
-
-**Additionally, push notification:**
-```bash
-# Add a comment to notify about the update
-gh pr comment ${pr_number} --body "Updated PR with latest changes from $(git log -1 --pretty=format:'%h - %s')"
-```
-
-**After update, show:**
-```
-✓ PR updated successfully
-
-PR #${number}: ${title}
-Status: Updated with latest changes
-URL: ${url}
-Target: ${current_branch} → ${target_branch}
-
-Latest commit: $(git log -1 --oneline)
-```
-
-### 9. Final Report
-
-Show summary of what was done:
-
-**For new PR:**
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Pull Request Created
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PR #${number}: ${title}
-URL: ${url}
-
-${current_branch} → ${target_branch}
-
-Changes:
-  ${commit_count} commits
-  ${files_count} files changed
+### 8. Report Results
 
 Next steps:
   • Review PR on GitHub

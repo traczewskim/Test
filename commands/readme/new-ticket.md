@@ -6,10 +6,10 @@ Creates a new feature branch for a ticket and stores the ticket number for autom
 
 ```bash
 # Start work on a ticket, branching from master (default)
-/new-ticket ext-1234
+/new-ticket jira-1234
 
 # Start work on a ticket, branching from a specific branch
-/new-ticket ext-1234 release/v3.2.0
+/new-ticket jira-1234 release/v3.2.0
 
 # Start work on a ticket, branching from develop
 /new-ticket JIRA-456 develop
@@ -27,7 +27,7 @@ Creates a new feature branch for a ticket and stores the ticket number for autom
 ## Arguments
 
 1. **ticket-number** (REQUIRED): The ticket identifier
-   - Examples: `ext-1234`, `EXT-1234`, `JIRA-456`, `abc-789`
+   - Examples: `jira-1234`, `JIRA-1234`, `JIRA-456`, `abc-789`
    - Casing is preserved exactly as provided
    - Will be used as the branch name: `feature/<ticket-number>`
 
@@ -41,46 +41,46 @@ Creates a new feature branch for a ticket and stores the ticket number for autom
 ### Example 1: Simple ticket on master
 
 ```bash
-/new-ticket ext-1234
+/new-ticket jira-1234
 ```
 
 **Result:**
-- Creates branch: `feature/ext-1234` from `master`
-- Next `/commit` will automatically extract and use `[ext-1234]` prefix from branch name
+- Creates branch: `feature/jira-1234` from `master`
+- Next `/commit` will automatically extract and use `[jira-1234]` prefix from branch name
 
 ### Example 2: Ticket on release branch
 
 ```bash
-/new-ticket EXT-5678 release/v3.2.0
+/new-ticket JIRA-5678 release/v3.2.0
 ```
 
 **Result:**
-- Creates branch: `feature/EXT-5678` from `release/v3.2.0`
-- Next `/commit` will automatically extract and use `[EXT-5678]` prefix from branch name
+- Creates branch: `feature/JIRA-5678` from `release/v3.2.0`
+- Next `/commit` will automatically extract and use `[JIRA-5678]` prefix from branch name
 
 ### Example 3: Full workflow
 
 ```bash
 # 1. Start work on ticket
-/new-ticket ext-999 develop
+/new-ticket jira-999 develop
 
 # 2. Make your changes
 # ... edit files ...
 
 # 3. Commit (ticket number automatically added)
 /commit
-# Result: "[ext-999] add user profile page"
+# Result: "[jira-999] add user profile page"
 
 # 4. Make more changes
 # ... edit more files ...
 
 # 5. Commit again (still uses same ticket)
 /commit
-# Result: "[ext-999] add profile validation"
+# Result: "[jira-999] add profile validation"
 
 # 6. Create pull request
 /pr develop
-# Result: PR titled "[EXT-999] Add user profile page with validation"
+# Result: PR titled "[JIRA-999] Add user profile page with validation"
 ```
 
 ## What it does
@@ -105,13 +105,13 @@ After using `/new-ticket`, the `/commit` command will automatically:
 - Extract the ticket number from the branch name
 - Add `[ticket-number]` prefix to commit messages
 - Supports `feature/*`, `fix/*`, `hotfix/*` patterns
-- Intelligently extracts ticket (e.g., `feature/ext-2232-description` → `ext-2232`)
+- Intelligently extracts ticket (e.g., `feature/jira-2232-description` → `jira-2232`)
 - You can still override by providing a different ticket: `/commit other-ticket`
 
 ### `/pr` command
 The `/pr` command will:
-- Extract ticket number from branch name `feature/ext-1234`
-- Convert to uppercase for PR title: `[EXT-1234]`
+- Extract ticket number from branch name `feature/jira-1234`
+- Convert to uppercase for PR title: `[JIRA-1234]`
 - Include in PR title automatically
 
 ## Error Handling
@@ -124,12 +124,12 @@ The `/pr` command will:
 
 ### Base branch doesn't exist
 ```bash
-/new-ticket ext-123 nonexistent-branch
+/new-ticket jira-123 nonexistent-branch
 ```
 **Error:** "Error: Base branch 'nonexistent-branch' does not exist. Available branches: [list]"
 
 ### Branch already exists
-If `feature/ext-123` already exists, you'll be asked whether to:
+If `feature/jira-123` already exists, you'll be asked whether to:
 - Switch to the existing branch
 - Delete and recreate it
 
@@ -151,7 +151,7 @@ cp commands/commands/new-ticket.md ~/.claude/commands/
 1. **Use with team workflows**: Store in `.claude/commands/` and commit to git to share with team
 2. **Consistent naming**: Always use the same ticket format your team uses (e.g., always lowercase or uppercase)
 3. **Base branch**: For hotfixes on production, use the production branch as base
-4. **Branch descriptions**: You can add descriptions to branch names (e.g., `feature/ext-123-add-auth`) - the ticket will still be extracted correctly
+4. **Branch descriptions**: You can add descriptions to branch names (e.g., `feature/jira-123-add-auth`) - the ticket will still be extracted correctly
 
 ## Ticket Extraction
 
@@ -159,7 +159,7 @@ The `/commit` command automatically extracts the ticket number from your branch 
 - Works with `feature/*`, `fix/*`, and `hotfix/*` branches
 - Extracts ticket up to the first dash after numbers
 - Examples:
-  - `feature/ext-2232-some-updates` → extracts `ext-2232`
+  - `feature/jira-2232-some-updates` → extracts `jira-2232`
   - `fix/JIRA-456-bug-fix` → extracts `JIRA-456`
   - `hotfix/ABC-123-critical` → extracts `ABC-123`
 - No file storage needed - everything is based on branch naming

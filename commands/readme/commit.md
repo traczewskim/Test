@@ -9,12 +9,12 @@ Creates a git commit with auto-generated message and optional ticket number.
 /commit
 
 # With ticket number (override branch extraction)
-/commit ext-123
+/commit jira-123
 
 # On feature branch (ticket automatically extracted)
-/new-ticket ext-456
+/new-ticket jira-456
 # ... make changes ...
-/commit  # Automatically uses [ext-456] prefix from branch name
+/commit  # Automatically uses [jira-456] prefix from branch name
 ```
 
 ## Features
@@ -23,7 +23,7 @@ Creates a git commit with auto-generated message and optional ticket number.
 - **Automatic ticket number**: Extracts ticket from branch name (`feature/*`, `fix/*`, `hotfix/*`)
 - Automatically stages all changes (`git add .`)
 - Analyzes diff to generate descriptive commit message
-- Supports ticket number prefix (preserves casing): `[ext-123] commit message`
+- Supports ticket number prefix (preserves casing): `[jira-123] commit message`
 - Manual ticket override: Can provide ticket as argument to override branch extraction
 - Single-message execution (all operations in one response)
 - Restricted tool permissions for safety
@@ -40,30 +40,30 @@ Creates a git commit with auto-generated message and optional ticket number.
 
 2. Commit with explicit ticket number:
    ```bash
-   /commit ext-456
-   # Result: "[ext-456] fix login validation bug"
+   /commit jira-456
+   # Result: "[jira-456] fix login validation bug"
    ```
 
 3. Commit on feature branch (ticket extracted from branch):
    ```bash
-   /new-ticket ext-789
+   /new-ticket jira-789
    # ... make changes ...
    /commit
-   # Result: "[ext-789] add user profile page"
+   # Result: "[jira-789] add user profile page"
    ```
 
 4. Override branch extraction:
    ```bash
-   # On branch feature/ext-111
+   # On branch feature/jira-111
    # ... make changes for different ticket ...
-   /commit ext-222  # Override with different ticket
-   # Result: "[ext-222] fix critical bug"
+   /commit jira-222  # Override with different ticket
+   # Result: "[jira-222] fix critical bug"
    ```
 
 5. Different ticket formats (all work, casing preserved):
    ```bash
-   /commit ext-123      # → [ext-123] ...
-   /commit EXT-123      # → [EXT-123] ...
+   /commit jira-123      # → [jira-123] ...
+   /commit JIRA-123      # → [JIRA-123] ...
    /commit jira-456     # → [jira-456] ...
    ```
 
@@ -82,8 +82,8 @@ Creates a git commit with auto-generated message and optional ticket number.
 ## Ticket Number Priority
 
 The command determines the ticket number in this order:
-1. **Argument**: If you provide a ticket as argument (`/commit ext-123`), use that
-2. **Branch name**: If no argument, extract from branch name (e.g., `feature/ext-123-description` → `ext-123`)
+1. **Argument**: If you provide a ticket as argument (`/commit jira-123`), use that
+2. **Branch name**: If no argument, extract from branch name (e.g., `feature/jira-123-description` → `jira-123`)
    - Supports `feature/*`, `fix/*`, `hotfix/*` patterns
    - Extracts ticket up to first dash after numbers
 3. **None**: If neither available, create commit without ticket prefix
@@ -117,16 +117,16 @@ When you use `/new-ticket` to start work on a ticket:
 
 **Workflow example:**
 ```bash
-/new-ticket ext-500 release/v3.2.0  # Creates branch feature/ext-500
+/new-ticket jira-500 release/v3.2.0  # Creates branch feature/jira-500
 # ... make changes ...
-/commit                              # Extracts [ext-500] from branch name
+/commit                              # Extracts [jira-500] from branch name
 # ... make more changes ...
-/commit                              # Still extracts [ext-500]
+/commit                              # Still extracts [jira-500]
 /commit urgent-fix                   # Override with [urgent-fix]
 ```
 
 **Branch name patterns:**
-- `feature/ext-2232-some-updates` → extracts `ext-2232`
+- `feature/jira-2232-some-updates` → extracts `jira-2232`
 - `fix/JIRA-456-bug-fix` → extracts `JIRA-456`
 - `hotfix/ABC-123-critical` → extracts `ABC-123`
 

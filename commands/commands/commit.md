@@ -27,14 +27,14 @@ Current branch: !`git branch --show-current`
      - Support branch patterns: `feature/*`, `fix/*`, `hotfix/*`
      - Extract ticket number using this logic:
        - Remove the prefix (`feature/`, `fix/`, or `hotfix/`)
-       - Find the pattern `[text]-[numbers]` (e.g., `ext-2232`, `JIRA-456`)
+       - Find the pattern `[text]-[numbers]` (e.g., `jira-2232`, `JIRA-456`)
        - Stop at the first dash that comes AFTER the numbers
        - Everything before that dash is the ticket number
      - Examples:
-       - `feature/ext-2232-some-updates` → ticket number is `ext-2232`
+       - `feature/jira-2232-some-updates` → ticket number is `jira-2232`
        - `fix/JIRA-456-bug-fix` → ticket number is `JIRA-456`
        - `hotfix/ABC-123-critical` → ticket number is `ABC-123`
-       - `feature/ext-2232` → ticket number is `ext-2232` (no extra dashes)
+       - `feature/jira-2232` → ticket number is `jira-2232` (no extra dashes)
    - **Priority 3**: If none of the above, proceed without ticket number
 
 2. **Check branch safety**:
@@ -63,7 +63,7 @@ Current branch: !`git branch --show-current`
    - If ticket number is available (from argument or `.git/.current-ticket` file):
      - Use the ticket number exactly as provided (preserve original casing)
      - Format: `[TICKET-NUMBER] commit message`
-     - Example: `[ext-123] add user authentication`
+     - Example: `[jira-123] add user authentication`
    - If no ticket number available:
      - Format: `commit message` (no prefix)
      - Example: `update documentation`
@@ -73,7 +73,7 @@ Current branch: !`git branch --show-current`
    - Do NOT add any footers, attribution, or "Generated with Claude Code" text
    - Do NOT add "Co-Authored-By" lines
    - Format: `git commit -m "commit message"` (simple, single-line message only)
-   - Example: `git commit -m "add user authentication"` or `git commit -m "[ext-123] fix login bug"`
+   - Example: `git commit -m "add user authentication"` or `git commit -m "[jira-123] fix login bug"`
 
 8. **Report results**: Show the commit hash and message
 
