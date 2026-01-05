@@ -97,6 +97,7 @@ echo "  - create-proposal - Create technical proposals with 5-phase workflow"
 echo "  - create-technical-requirements - Generate detailed technical requirements"
 echo "  - database-analysis - Analyze database patterns and execute queries"
 echo "  - frontend-design - Create production-grade frontend interfaces"
+echo "  - new-command - Interactive wizard for creating new commands and skills"
 echo ""
 
 if [ "$INSTALL_TYPE" = "project-level" ]; then
