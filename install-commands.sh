@@ -91,6 +91,7 @@ echo "  /pr-review <pr-number>"
 echo "  /sync-branch <target-branch>"
 echo "  /lint"
 echo "  /compare-branch <branch1> [branch2]"
+echo "  /release [version] [branch] [--pre-release]"
 echo ""
 
 if [ "$INSTALL_TYPE" = "project-level" ]; then

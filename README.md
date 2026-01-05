@@ -15,13 +15,17 @@ Enhanced git workflow automation with safety features and standardized processes
 - **[/compare-branch](commands/readme/compare-branch.md)** - Compare two branches to see differences in commits, files, and tickets
 - **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
 - **[/pr-review](commands/readme/pr-review.md)** - Perform thorough code reviews with quality, security, and test analysis
+- **[/release](commands/readme/release.md)** - Create GitHub releases with automatic version detection and release notes generation
 
 **Key improvements over official Anthropic commands:**
-- ✅ Integrated ticket workflow (create ticket → commit → PR)
+- ✅ Integrated ticket workflow (create ticket → commit → PR → release)
 - ✅ Branch safety (prevents commits directly to main/master)
 - ✅ Automatic ticket number tracking across commands
+- ✅ Branch normalization (handles "main" vs "origin/main" automatically)
+- ✅ Interactive release workflow with version detection and RC support
 - ✅ Ticket number support with preserved casing
 - ✅ Detailed PR descriptions with structured format
+- ✅ Auto-generated release notes from git commits
 - ✅ Single-message execution for reliability
 - ✅ Restricted tool permissions for security
 
@@ -126,6 +130,49 @@ Your task instructions here...
 Skills are more complex capabilities with detailed instructions and context.
 
 See existing skills in `SKILLS/skills/` for examples and patterns.
+
+## Complete Workflow Example
+
+Here's how all the commands work together for a complete development workflow:
+
+```bash
+# 1. Start work on a new ticket
+/new-ticket jira-1234 main
+
+# 2. Make your changes
+# ... edit files ...
+
+# 3. Run linters
+/lint
+
+# 4. Commit with automatic ticket number
+/commit
+# Result: "[jira-1234] add user authentication feature"
+
+# 5. Make more changes
+# ... edit more files ...
+
+# 6. Commit again
+/commit
+# Result: "[jira-1234] add password validation"
+
+# 7. Keep branch up-to-date with main
+/sync-branch main
+
+# 8. Create pull request
+/pr main
+# Result: PR titled "[JIRA-1234] Add user authentication feature"
+
+# 9. After PR is merged, create release candidate
+git checkout release/v1.0.2
+/release
+# Wizard creates: v1.0.2-rc.1 (pre-release)
+
+# 10. After testing RC, create final release
+git checkout master
+/release
+# Wizard creates: v1.0.2 (regular release)
+```
 
 ## Resources
 

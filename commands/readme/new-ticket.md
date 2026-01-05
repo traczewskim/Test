@@ -19,6 +19,7 @@ Creates a new feature branch for a ticket and stores the ticket number for autom
 
 - **Automatic branch creation**: Creates `feature/<ticket-number>` branch
 - **Flexible base branch**: Choose which branch to branch from (defaults to master)
+- **Branch normalization**: Handles "main" vs "origin/main", "master" vs "origin/master" automatically
 - **Smart ticket extraction**: `/commit` automatically extracts ticket from branch name
 - **Branch validation**: Checks if base branch exists before creating new branch
 - **Casing preservation**: Keeps ticket number exactly as provided
@@ -34,7 +35,9 @@ Creates a new feature branch for a ticket and stores the ticket number for autom
 2. **base-branch** (OPTIONAL): The branch to branch from
    - Defaults to `master` if not provided
    - Examples: `release/v3.2.0`, `develop`, `main`, `staging`
-   - Must be an existing branch
+   - Supports both local and remote branch references (e.g., `main` or `origin/main`)
+   - Automatically normalized - if you specify `main` but only `origin/main` exists, it will use `origin/main`
+   - Must be an existing branch (either local or remote)
 
 ## Examples
 
@@ -83,13 +86,41 @@ Creates a new feature branch for a ticket and stores the ticket number for autom
 # Result: PR titled "[JIRA-999] Add user profile page with validation"
 ```
 
+## Branch Normalization
+
+The command automatically handles different branch reference formats:
+
+**How it works:**
+- If you specify `main`, the command first checks if `main` exists
+- If `main` doesn't exist locally, it tries `origin/main`
+- Same logic applies to: `master`, `develop`, `staging`, `production`, and `release/*` branches
+- Uses the first valid branch reference found
+
+**Examples:**
+```bash
+# You specify "main", but only "origin/main" exists
+/new-ticket jira-123 main
+# ✓ Uses origin/main automatically
+
+# You specify "origin/master", but only "master" exists locally
+/new-ticket jira-456 origin/master
+# ✓ Uses master automatically
+
+# You specify "release/v1.0.2", tries both local and origin
+/new-ticket jira-789 release/v1.0.2
+# ✓ Uses whichever exists (release/v1.0.2 or origin/release/v1.0.2)
+```
+
+This makes the command more flexible and forgiving - you don't need to remember whether a branch exists locally or remotely.
+
 ## What it does
 
 1. **Validates arguments**: Ensures ticket number is provided
-2. **Checks base branch**: Verifies base branch exists
-3. **Fetches latest**: Gets latest changes from base branch (if remote exists)
-4. **Creates branch**: Creates and checks out `feature/<ticket-number>` from base branch
-5. **Reports success**: Shows branch name, base, and next steps
+2. **Normalizes base branch**: Handles local vs remote branch references automatically
+3. **Checks base branch**: Verifies base branch exists (after normalization)
+4. **Fetches latest**: Gets latest changes from origin
+5. **Creates branch**: Creates and checks out `feature/<ticket-number>` from normalized base branch
+6. **Reports success**: Shows branch name, normalized base, and next steps
 
 ## What it does NOT do
 

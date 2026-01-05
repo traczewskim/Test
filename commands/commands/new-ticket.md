@@ -38,22 +38,25 @@ Arguments are provided in $ARGUMENTS in the format: `<ticket-number> [base-branc
   - Do NOT proceed with any other steps
 - If ticket number is provided, proceed
 
-### 2. Validate Base Branch
+### 2. Validate and Normalize Base Branch
 
-Check if the base branch exists:
-
-```bash
-git rev-parse --verify <base-branch> 2>/dev/null
-```
-
-- If base branch does NOT exist:
-  - List available branches: `git branch -a`
-  - Stop with error: "Error: Base branch '<base-branch>' does not exist. Available branches: [list]"
-- If base branch exists, proceed
+**Normalize the branch name:**
+- User-provided branch is the base branch from step 1 (e.g., "main", "origin/main", "master")
+- Check if the exact branch exists: `git rev-parse --verify <base-branch> 2>/dev/null`
+- If it doesn't exist, try alternative forms:
+  - If base branch is "main", try "origin/main"
+  - If base branch is "origin/main", try "main"
+  - If base branch is "master", try "origin/master"
+  - If base branch is "origin/master", try "master"
+  - Same pattern for: develop, staging, production, release/*, etc.
+- Use the first valid branch reference found
+- If no valid branch found, error with: "Error: Base branch '<base-branch>' does not exist. Available branches:" and list branches
+- **Store the normalized branch name in a variable** - use this in ALL subsequent git commands
+- Common base branches: master, main, develop, staging, release/*
 
 ### 3. Create Feature Branch
 
-Create a new feature branch from the base branch:
+Create a new feature branch from the normalized base branch:
 
 **Branch naming format:** `feature/<ticket-number>`
 - Use the ticket number exactly as provided (preserve original casing)
@@ -63,10 +66,10 @@ Create a new feature branch from the base branch:
   - Ticket "jira-456" → branch "feature/jira-456"
 
 **Steps:**
-1. First, fetch latest changes (if remote exists): `git fetch origin <base-branch> 2>/dev/null || true`
-2. Create and checkout the new branch:
+1. First, fetch latest changes (if remote exists): `git fetch origin 2>/dev/null || true`
+2. Create and checkout the new branch using the **normalized** base branch from step 2:
    ```bash
-   git checkout -b feature/<ticket-number> <base-branch>
+   git checkout -b feature/<ticket-number> <normalized-base-branch>
    ```
 
 **Error handling:**
@@ -76,13 +79,13 @@ Create a new feature branch from the base branch:
 
 ### 4. Report Results
 
-Show a success message with clear information:
+Show a success message with clear information using the **normalized** base branch:
 
 ```
 ✓ Created new feature branch for ticket <ticket-number>
 
 Branch: feature/<ticket-number>
-Base: <base-branch>
+Base: <normalized-base-branch>
 Ticket: <ticket-number>
 
 The ticket number will be automatically extracted from the branch name when you run /commit.
@@ -98,8 +101,10 @@ Next steps:
 - **Execute all operations in ONE message** - do not send multiple responses
 - Ticket number is REQUIRED - stop immediately if not provided
 - Base branch defaults to "master" if not provided
+- **Normalize base branch name** - handle "main" vs "origin/main", "master" vs "origin/master", etc.
+- Use the **normalized** branch name in all git commands (fetch, checkout)
 - Preserve ticket number casing exactly as provided
 - Branch format is always `feature/<ticket-number>`
 - The `/commit` command will automatically extract the ticket number from the branch name
-- Fetch latest changes from base branch before creating new branch
+- Fetch latest changes from origin before creating new branch
 - Do NOT push the new branch automatically (user will do this when ready)
