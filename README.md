@@ -136,5 +136,5 @@ This is a personal collection, but feel free to fork and create your own custom 
 
 ---
 
-**License**: Personal collection - feel free to use and modify
+**Maintained By**: Michal Traczewski ([@traczewskim](https://github.com/traczewskim))
 **Last Updated**: January 2026
