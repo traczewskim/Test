@@ -12,8 +12,6 @@ Current branch: !`git branch --show-current`
 
 Git status: !`git status --short`
 
-Working directory clean: !`git status --porcelain | wc -l | awk '{if ($1 == 0) print "yes"; else print "no"}'`
-
 Recent commits: !`git log --oneline -5`
 
 Remote branches: !`git branch -r | head -10`
