@@ -19,7 +19,7 @@ Creates a GitHub pull request with auto-generated title, detailed description, a
 
 - Auto-generates PR title from recent commits
 - Creates detailed PR description with summary, changes, and testing notes
-- Extracts ticket number from branch name (e.g., `feature/ext-123-login` → `[EXT-123]`)
+- Extracts ticket number from branch name (e.g., `feature/jira-123-login` → `[JIRA-123]`)
 - Automatically pushes current branch to remote
 - Force pushes with `--force-with-lease` if branch already exists
 - Does NOT open browser (creates PR via CLI only)
@@ -31,9 +31,9 @@ Creates a GitHub pull request with auto-generated title, detailed description, a
 
 1. Simple PR from feature branch:
    ```bash
-   # On branch: feature/ext-123-user-auth
+   # On branch: feature/jira-123-user-auth
    /pr master
-   # Result: Creates PR with title "[EXT-123] Add user authentication"
+   # Result: Creates PR with title "[JIRA-123] Add user authentication"
    ```
 
 2. PR without ticket number:
@@ -45,9 +45,9 @@ Creates a GitHub pull request with auto-generated title, detailed description, a
 
 3. PR to different target:
    ```bash
-   # On branch: feature/ext-456-api
+   # On branch: feature/jira-456-api
    /pr develop
-   # Result: Creates PR to develop branch with title "[EXT-456] Add new API endpoints"
+   # Result: Creates PR to develop branch with title "[JIRA-456] Add new API endpoints"
    ```
 
 ## What it does

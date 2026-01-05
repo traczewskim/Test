@@ -35,9 +35,9 @@ Detailed diff: !`git diff $ARGUMENTS..HEAD --stat`
 ### 2. Extract Ticket Number from Current Branch
 
 - Get current branch name
-- Look for ticket pattern: `feature/ext-123-description`, `bugfix/jira-456`, `ext-789`, etc.
-- Extract ticket number (e.g., "ext-123", "jira-456")
-- Convert to UPPERCASE (e.g., "EXT-123", "JIRA-456")
+- Look for ticket pattern: `feature/jira-123-description`, `bugfix/jira-456`, `jira-789`, etc.
+- Extract ticket number (e.g., "jira-123", "jira-456")
+- Convert to UPPERCASE (e.g., "JIRA-123", "JIRA-456")
 - If no ticket found, that's OK (proceed without ticket prefix)
 
 ### 3. Generate PR Title
@@ -48,7 +48,7 @@ Detailed diff: !`git diff $ARGUMENTS..HEAD --stat`
 - If no ticket number, format as: `title`
 - Use imperative mood (e.g., "Add feature" not "Added feature")
 - Examples:
-  - `[EXT-123] Add user authentication with JWT`
+  - `[JIRA-123] Add user authentication with JWT`
   - `[JIRA-456] Fix memory leak in data processor`
   - `Update database schema for new fields`
 

@@ -22,7 +22,7 @@ Arguments provided: $ARGUMENTS
 
 Arguments are provided in $ARGUMENTS in the format: `<ticket-number> [base-branch]`
 
-- **ticket-number** (REQUIRED): The ticket identifier (e.g., "ext-1234", "JIRA-456")
+- **ticket-number** (REQUIRED): The ticket identifier (e.g., "jira-1234", "JIRA-456")
 - **base-branch** (OPTIONAL): The branch to branch from (e.g., "release/v3.2.0", "develop")
   - If not provided, use "master" as default
 
@@ -58,8 +58,8 @@ Create a new feature branch from the base branch:
 **Branch naming format:** `feature/<ticket-number>`
 - Use the ticket number exactly as provided (preserve original casing)
 - Examples:
-  - Ticket "ext-1234" → branch "feature/ext-1234"
-  - Ticket "EXT-1234" → branch "feature/EXT-1234"
+  - Ticket "jira-1234" → branch "feature/jira-1234"
+  - Ticket "JIRA-1234" → branch "feature/JIRA-1234"
   - Ticket "jira-456" → branch "feature/jira-456"
 
 **Steps:**
