@@ -88,6 +88,9 @@ echo "  /new-ticket <ticket-number> [base-branch]"
 echo "  /commit [ticket-number]"
 echo "  /pr <target-branch>"
 echo "  /pr-review <pr-number>"
+echo "  /sync-branch <target-branch>"
+echo "  /lint"
+echo "  /compare-branch <branch1> [branch2]"
 echo ""
 
 if [ "$INSTALL_TYPE" = "project-level" ]; then
