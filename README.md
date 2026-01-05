@@ -136,5 +136,5 @@ This is a personal collection, but feel free to fork and create your own custom 
 
 ---
 
-**Maintained By**: EMP Development Team
-**Last Updated**: December 2025
+**License**: Personal collection - feel free to use and modify
+**Last Updated**: January 2026
