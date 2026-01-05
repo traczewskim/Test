@@ -15,7 +15,7 @@ Enhanced git workflow automation with safety features and standardized processes
 - **[/compare-branch](commands/readme/compare-branch.md)** - Compare two branches to see differences in commits, files, and tickets
 - **[/pr](commands/readme/pr.md)** - Create GitHub pull requests with detailed descriptions and ticket extraction
 - **[/pr-review](commands/readme/pr-review.md)** - Perform thorough code reviews with quality, security, and test analysis
-- **[/release](commands/readme/release.md)** - Create GitHub releases with automatic version detection and release notes generation
+- **[/release](commands/readme/release.md)** - Create GitHub releases with automatic version detection and release notes generation ⚠️ **EXPERIMENTAL**
 
 **Key improvements over official Anthropic commands:**
 - ✅ Integrated ticket workflow (create ticket → commit → PR → release)
@@ -33,6 +33,7 @@ Enhanced git workflow automation with safety features and standardized processes
 
 Specialized capabilities for common development tasks:
 
+- **[new-command](SKILLS/readme/new-command.md)** - Interactive wizard for creating new Claude Code commands and skills with guided workflow ⚠️ **EXPERIMENTAL**
 - **[create-proposal](SKILLS/readme/create-proposal.md)** - Create detailed technical proposals for new features following a structured 5-phase approach (requirements → brainstorming → drafts → confirmation → implementation)
 - **[create-technical-requirements](SKILLS/readme/create-technical-requirements.md)** - Generate comprehensive, step-by-step technical requirements documentation for implementable specifications
 - **[database-analysis](SKILLS/readme/database-analysis.md)** - Connect to databases, execute queries, and analyze data patterns
