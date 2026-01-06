@@ -1,7 +1,7 @@
 ---
 description: Start work on a new ticket
 argument-hint: <ticket-number> [base-branch]
-allowed-tools: Bash(git rev-parse:*), Bash(git fetch:*), Bash(git checkout:*), Bash(git branch:*)
+allowed-tools: Bash(git rev-parse:*), Bash(git fetch:*), Bash(git checkout:*), Bash(git branch:*), Bash(git push:*)
 ---
 
 # New Ticket Command
@@ -77,16 +77,40 @@ Create a new feature branch from the normalized base branch:
   - Ask user if they want to switch to it or delete and recreate
   - Stop and wait for user decision
 
-### 4. Report Results
+### 4. Push Branch and Set Up Tracking
+
+Push the newly created branch to remote and set up tracking:
+
+**Steps:**
+1. Push with `-u` flag to set up tracking:
+   ```bash
+   git push -u origin feature/<ticket-number>
+   ```
+
+**This ensures:**
+- The branch is available on the remote repository
+- Tracking is set up so future `git push` commands work without arguments
+- Other team members can see the branch
+
+**Error handling:**
+- If push fails (no remote, authentication issues, etc.):
+  - Show the error message
+  - Warn user that branch is local only
+  - Continue to step 5 (don't fail completely)
+  - User can manually push later
+
+### 5. Report Results
 
 Show a success message with clear information using the **normalized** base branch:
 
+**If push succeeded:**
 ```
-✓ Created new feature branch for ticket <ticket-number>
+✓ Created and pushed new feature branch for ticket <ticket-number>
 
 Branch: feature/<ticket-number>
 Base: <normalized-base-branch>
 Ticket: <ticket-number>
+Remote: origin (tracking enabled)
 
 The ticket number will be automatically extracted from the branch name when you run /commit.
 
@@ -94,6 +118,23 @@ Next steps:
   1. Make your changes
   2. Run /commit to create a commit (ticket number will be extracted from branch name)
   3. Run /pr <target-branch> to create a pull request
+```
+
+**If push failed (local only):**
+```
+✓ Created new feature branch for ticket <ticket-number> (local only)
+
+Branch: feature/<ticket-number>
+Base: <normalized-base-branch>
+Ticket: <ticket-number>
+⚠️  Warning: Branch was not pushed to remote
+
+The ticket number will be automatically extracted from the branch name when you run /commit.
+
+Next steps:
+  1. Make your changes
+  2. Run /commit to create a commit (ticket number will be extracted from branch name)
+  3. Run /pr <target-branch> to create a pull request (will push and set up tracking)
 ```
 
 ## Important Notes
@@ -107,4 +148,5 @@ Next steps:
 - Branch format is always `feature/<ticket-number>`
 - The `/commit` command will automatically extract the ticket number from the branch name
 - Fetch latest changes from origin before creating new branch
-- Do NOT push the new branch automatically (user will do this when ready)
+- **Push the new branch with `-u` flag** to set up tracking automatically
+- If push fails, continue anyway (branch remains local only)
