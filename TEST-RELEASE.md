@@ -6,3 +6,4 @@ This file is created to test the experimental slash commands.
 
 - Feature 1: Added for testing
 - Feature 2: Added for testing
+- Feature 3: Bug fix for issue
