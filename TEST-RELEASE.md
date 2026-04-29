@@ -9,3 +9,4 @@ This file is created to test the experimental slash commands.
 - Feature 3: Bug fix for issue
 - Feature 4: Something
 v0.1.1 release prep
+v0.1.2
